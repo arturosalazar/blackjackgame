@@ -1,7 +1,7 @@
 import java.util.Scanner;
 import java.util.Random;
 
-//Ver.1 - return true if you win, false if you lose
+//Ver.2 - return true if you win, false if you lose
 public class Blackjack {
 	//Intance Variables
 	public Scanner userInput;
@@ -14,7 +14,7 @@ public class Blackjack {
 	private int[] betArray;
 	private Random randomBetNum;
 	private int userIndex;
-	final private int AI_CARD_STOP_DRAWING_POINT = 16; //TODO: Maybe we can make this a value for each player to change difficulty
+	final private int AI_CARD_STOP_DRAWING_POINT = 13;
 	private String garbage;
 	
 	//Constructor
@@ -107,20 +107,20 @@ public class Blackjack {
 		System.out.println("You bet :" + betArray[userIndex] + "\n");
 		
 		//Deal all the players in
-		for (Hand playerHand: handArray)
+		for (int i = 0; i < handArray.length; i++)
 		{
 			//Clear each player's hand before starting a new set
-			playerHand.clear();
-			playerHand.addCard(deck.dealCards());
-			playerHand.addCard(deck.dealCards());
+			handArray[i].clear();
+			handArray[i].addCard(deck.dealCards());
+			handArray[i].addCard(deck.dealCards());
 			
 			//In traditional blackjack, the Dealer only reveals one card
-			if (playerHand.getId() == "Dealer")
+			if (i == 0)
 			{
-				System.out.println(playerHand.getId() +": " + playerHand.getCard(0));
+				System.out.println(handArray[i].getId() +": " + handArray[i].getCard(0));
 			}
 			else 
-				System.out.println(playerHand.getId() +": " + playerHand);
+				System.out.println(handArray[i].getId() +": " + handArray[i]);
 		}
 		
 		//Do an initial check to see if someone won the deal
@@ -135,7 +135,7 @@ public class Blackjack {
 			}
 			else if (handArray[i].valueOfHand() == 21)
 			{
-				System.out.println("\n" + handArray[i].getId() + " got 21 and won. You have lost.");
+				System.out.println("\n" + handArray[i].getId() + " got Blackjack and won. You have lost.");
 				playerWins(playerArray[i], i);
 				playerLoses(i);
 				return false;
@@ -185,17 +185,24 @@ public class Blackjack {
 		//Per above, we can probably change this value to change how well/poorly the AI plays
 		for (int i = 0; i < handArray.length; i++)
 		{
+			//We add sleep so that the results come out in a more user friendly way
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			if (!(i == userIndex))
 			{
 				System.out.println("\n" + handArray[i].getId() + "'s turn");
 				System.out.println(handArray[i]);
-				while (handArray[i].valueOfHand() < AI_CARD_STOP_DRAWING_POINT) {
+				//Create variability in the AI's actions by adding getAITendency to the way the AI draws cards
+				while (handArray[i].valueOfHand() < (AI_CARD_STOP_DRAWING_POINT + playerArray[i].getAITendency())) {
 					handArray[i].addCard(deck.dealCards());
 					System.out.println(handArray[i]);
 				}
 				if (handArray[i].valueOfHand() == 21)
 				{
-					System.out.println(handArray[i].getId() + " has won. You have lost");
+					System.out.println(handArray[i].getId() + " got Blackjack. You have lost");
 					playerWins(playerArray[i], i);
 					playerLoses(i);
 					return false;
@@ -206,12 +213,18 @@ public class Blackjack {
 				{
 					System.out.println(handArray[i].getId() + " has completed turn");
 				}
+				
 			}
 		}
 		
 		//Final comparison
 		System.out.println("\nTime to find out who is closest to 21");
-		
+		//Wait 1 second before revealing the results/winner
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		//Find the maximum number, ignore anything over 21 points
 		Hand winner = handArray[userIndex];
 		int winnerIndex = 4;
@@ -236,10 +249,20 @@ public class Blackjack {
 			playerLoses(winnerIndex);
 			return true;
 		}
-		else
+		else 
+		{
 			System.out.println(winner.getId() + " won. You lost\n");
 			playerWins(playerArray[winnerIndex], winnerIndex);
 			playerLoses(winnerIndex);
+		}
+		//Pause 2 seconds before closing out
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 
 		
 	return false;
