@@ -1,7 +1,12 @@
+/*
+* Blackjack game coded by Arturo V. Salazar Jr.
+*
+*/
+
 import java.util.Scanner;
 import java.util.Random;
 
-//Ver.1 - return true if you win, false if you lose
+//Ver.2 - return true if you win, false if you lose
 public class Blackjack {
 	//Intance Variables
 	public Scanner userInput;
@@ -219,7 +224,7 @@ public class Blackjack {
 		
 		//Final comparison
 		System.out.println("\nTime to find out who is closest to 21");
-		//Wait 1 second before revealing the results/winner
+		//Wait 2 second before revealing the results/winner
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
