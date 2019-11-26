@@ -1,7 +1,7 @@
 import java.util.Scanner;
 import java.util.Random;
 
-//Ver.2 - return true if you win, false if you lose
+//Ver.1 - return true if you win, false if you lose
 public class Blackjack {
 	//Intance Variables
 	public Scanner userInput;
@@ -61,7 +61,7 @@ public class Blackjack {
 	
 	private int randomBet ()
 	{
-		return randomBetNum.nextInt(75) + 50;
+		return randomBetNum.nextInt(150) + 50;
 	}
 	
 	public boolean RoundOfBlackjack() 
