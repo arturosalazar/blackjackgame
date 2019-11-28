@@ -114,7 +114,7 @@ public class Blackjack {
 		System.out.println("You bet :" + betArray[userIndex] + "\n");
 		
 		//Deal all the players in
-		for (int i = 0; i < handArray.length; i++)
+		for (int i = 4 ; i >= 0 ; i--)
 		{
 			//Clear each player's hand before starting a new set
 			handArray[i].clear();
