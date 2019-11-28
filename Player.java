@@ -49,6 +49,6 @@ public class Player {
 	
 	public void removeChips (int chipsToRemove)
 	{
-		this.chips += chipsToRemove;
+		this.chips -= chipsToRemove;
 	}
 }
