@@ -8,18 +8,14 @@ public class BlackJackClient {
 		Player[] players = new Player[5];
 		
 		//Set up human player and put player in players array
-		Player human = new Player(new Hand ("Agent") , "Human" , 0 , 1000);
+		Player human = new Player(new Hand () , "Human" , 0 , 1000);
 		players[0] = human;
-		
-		
-		// randomly assign AITendency
-		int[] tendencyArray = new int[4];
-		for (int i=0; i <= 3; i++) {tendencyArray[i]=(int)(Math.random()*4 +0);}//assume AITendency range from 0 to 4
 
 		//complete players array
 		for (int i = 1; i < 5; i++) {
 			String playerRole = "Player " + i;
-			int playerSkill = (int) (random.nextInt()*4);
+			int playerSkill = (int)(random.nextInt(5));
+			System.out.println(playerSkill);
 			if (i == 4) {
 				playerRole = "Dealer";
 			}
@@ -34,7 +30,7 @@ public class BlackJackClient {
 			System.out.println("\nRound "+ round_count);
 			
 			// blackjack game
-			Blackjack blackjack = new Blackjack(players[4], players[3], players[2], players[1], players[0]);
+			Blackjack blackjack = new Blackjack(players[0], players[1], players[2], players[3], players[4]);
 			
 			blackjack.RoundOfBlackjack();
 			
