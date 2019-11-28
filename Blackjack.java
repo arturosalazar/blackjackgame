@@ -39,7 +39,7 @@ public class Blackjack {
 		playerArray = new Player[] { userPlayer, onePlayer, twoPlayer, threePlayer, dealerPlayer };
 		handArray = new Hand[] { userHand, oneHand, twoHand, threeHand, dealerHand };
 		betArray = new int[] { userBet, oneBet, twoBet, threeBet, dealerBet };
-		userIndex = playerArray.length - 1;
+		userIndex = 0;
 		garbage = "";
 		deck.shuffle();
 		randomBetNum = new Random ();
@@ -48,14 +48,19 @@ public class Blackjack {
 	private void playerWins (Player winningPlayer, int winningIndex) 
 	{
 		winningPlayer.addChips(betArray[winningIndex]);
+		//Wait 2 second after updating and before allowing new game to start
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private void playerLoses(int winningPlayerIndex) 
 	{
 		for (int j = 0; j < playerArray.length; j++)
 		{
-			if (j != winningPlayerIndex) {
-				
+			if (j != winningPlayerIndex) {		
 				playerArray[j].removeChips(betArray[j]);
 			}
 		}
@@ -84,7 +89,7 @@ public class Blackjack {
 		
 		//Print out balances for each player
 		System.out.println("\nChips Balance : ");
-		for (int i = 0; i < playerArray.length - 1; i++)
+		for (int i = 4; i > 0 ; i--)
 		{
 			String chipsBalanceString = Integer.toString(playerArray[i].getChips());
 			String betBalanceString = Integer.toString(betArray[i]);
@@ -117,7 +122,7 @@ public class Blackjack {
 			handArray[i].addCard(deck.dealCards());
 			
 			//In traditional blackjack, the Dealer only reveals one card
-			if (i == 0)
+			if (i == playerArray.length - 1)
 			{
 				System.out.println(playerArray[i].getRole() +": " + handArray[i].getCard(0));
 			}
@@ -128,7 +133,7 @@ public class Blackjack {
 		//Do an initial check to see if someone won the deal
 		for (int i = 0; i < handArray.length; i++)
 		{
-			if (handArray[i].valueOfHand() == 21 && playerArray[i].getRole() == "Agent")
+			if (handArray[i].valueOfHand() == 21 && playerArray[i].getRole() == "Human")
 			{
 				System.out.println("\nYou won!");
 				playerWins(playerArray[i], i);
@@ -185,7 +190,7 @@ public class Blackjack {
 		
 		//The AI will attempt to play - AI will hit while they have less than 16 points.
 		//Per above, we can probably change this value to change how well/poorly the AI plays
-		for (int i = 0; i < handArray.length; i++)
+		for (int i = 4; i > 0; i--)
 		{
 			//We add sleep so that the results come out in a more user friendly way
 			try {
@@ -193,7 +198,7 @@ public class Blackjack {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			if (!(i == userIndex))
+			if (i != userIndex)
 			{
 				System.out.println("\n" + playerArray[i].getRole() + "'s turn");
 				System.out.println(handArray[i]);
@@ -253,7 +258,7 @@ public class Blackjack {
 		}
 		else 
 		{
-			System.out.println(winner.getId() + " won. You lost\n");
+			System.out.println(playerArray[winnerIndex].getRole() + " won. You lost\n");
 			playerWins(playerArray[winnerIndex], winnerIndex);
 			playerLoses(winnerIndex);
 		}
