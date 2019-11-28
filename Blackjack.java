@@ -1,8 +1,3 @@
-/*
-* Blackjack game coded by Arturo V. Salazar Jr.
-*
-*/
-
 import java.util.Scanner;
 import java.util.Random;
 
@@ -23,7 +18,7 @@ public class Blackjack {
 	private String garbage;
 	
 	//Constructor
-	public Blackjack(Player player4, Player player3, Player player2, Player player1, Player player0)
+	public Blackjack(Player player0, Player player1, Player player2, Player player3, Player player4)
 	{
 		userInput = new Scanner (System.in);
 		deck = new Deck ();
@@ -34,14 +29,16 @@ public class Blackjack {
 		onePlayer = player1;
 		userPlayer = player0;
 		
-		dealerHand = player4.gethand();
-		threeHand = player3.gethand();
-		twoHand = player2.gethand();
-		oneHand = player1.gethand();
-		userHand = player0.gethand();
-		playerArray = new Player[] {dealerPlayer, threePlayer, twoPlayer, onePlayer, userPlayer};
-		handArray = new Hand[] {dealerHand, threeHand, twoHand, oneHand, userHand};
-		betArray = new int[] {dealerBet, threeBet, twoBet, oneBet, userBet};
+		dealerHand = player4.getHand();
+		threeHand = player3.getHand();
+		twoHand = player2.getHand();
+		oneHand = player1.getHand();
+		userHand = player0.getHand();
+		
+		
+		playerArray = new Player[] { userPlayer, onePlayer, twoPlayer, threePlayer, dealerPlayer };
+		handArray = new Hand[] { userHand, oneHand, twoHand, threeHand, dealerHand };
+		betArray = new int[] { userBet, oneBet, twoBet, threeBet, dealerBet };
 		userIndex = playerArray.length - 1;
 		garbage = "";
 		deck.shuffle();
@@ -50,7 +47,7 @@ public class Blackjack {
 	
 	private void playerWins (Player winningPlayer, int winningIndex) 
 	{
-		winningPlayer.addchips(betArray[winningIndex]);
+		winningPlayer.addChips(betArray[winningIndex]);
 	}
 	
 	private void playerLoses(int winningPlayerIndex) 
@@ -59,7 +56,7 @@ public class Blackjack {
 		{
 			if (j != winningPlayerIndex) {
 				
-				playerArray[j].removechips(betArray[j]);
+				playerArray[j].removeChips(betArray[j]);
 			}
 		}
 	}
@@ -73,7 +70,7 @@ public class Blackjack {
 	{
 		int dealerBet, threeBet, twoBet, oneBet, userBet = 0;
 		//store chips balance to compare against input
-		int chipsBalance = userPlayer.getchips();
+		int chipsBalance = userPlayer.getChips();
 		
 		//Set bets for AI players, not user player
 		for (int i = 0; i < betArray.length; i++)
@@ -89,9 +86,9 @@ public class Blackjack {
 		System.out.println("\nChips Balance : ");
 		for (int i = 0; i < playerArray.length - 1; i++)
 		{
-			String chipsBalanceString = Integer.toString(playerArray[i].getchips());
+			String chipsBalanceString = Integer.toString(playerArray[i].getChips());
 			String betBalanceString = Integer.toString(betArray[i]);
-			System.out.println("\t"+ handArray[i].getId() + " :" + chipsBalanceString + "\tBet: " + betBalanceString);
+			System.out.println("\t"+ playerArray[i].getRole() + " :" + chipsBalanceString + "\tBet: " + betBalanceString);
 		}
 		
 		System.out.println("\n\tYour Chips : " + chipsBalance);
@@ -122,16 +119,16 @@ public class Blackjack {
 			//In traditional blackjack, the Dealer only reveals one card
 			if (i == 0)
 			{
-				System.out.println(handArray[i].getId() +": " + handArray[i].getCard(0));
+				System.out.println(playerArray[i].getRole() +": " + handArray[i].getCard(0));
 			}
 			else 
-				System.out.println(handArray[i].getId() +": " + handArray[i]);
+				System.out.println(playerArray[i].getRole() +": " + handArray[i]);
 		}
 		
 		//Do an initial check to see if someone won the deal
 		for (int i = 0; i < handArray.length; i++)
 		{
-			if (handArray[i].valueOfHand() == 21 && handArray[i].getId() == "Agent")
+			if (handArray[i].valueOfHand() == 21 && playerArray[i].getRole() == "Agent")
 			{
 				System.out.println("\nYou won!");
 				playerWins(playerArray[i], i);
@@ -140,7 +137,7 @@ public class Blackjack {
 			}
 			else if (handArray[i].valueOfHand() == 21)
 			{
-				System.out.println("\n" + handArray[i].getId() + " got Blackjack and won. You have lost.");
+				System.out.println("\n" + playerArray[i].getRole() + " got Blackjack and won. You have lost.");
 				playerWins(playerArray[i], i);
 				playerLoses(i);
 				return false;
@@ -198,25 +195,25 @@ public class Blackjack {
 			}
 			if (!(i == userIndex))
 			{
-				System.out.println("\n" + handArray[i].getId() + "'s turn");
+				System.out.println("\n" + playerArray[i].getRole() + "'s turn");
 				System.out.println(handArray[i]);
 				//Create variability in the AI's actions by adding getAITendency to the way the AI draws cards
-				while (handArray[i].valueOfHand() < (AI_CARD_STOP_DRAWING_POINT + playerArray[i].getAITendency())) {
+				while (handArray[i].valueOfHand() < (AI_CARD_STOP_DRAWING_POINT + playerArray[i].getSkill())) {
 					handArray[i].addCard(deck.dealCards());
 					System.out.println(handArray[i]);
 				}
 				if (handArray[i].valueOfHand() == 21)
 				{
-					System.out.println(handArray[i].getId() + " got Blackjack. You have lost");
+					System.out.println(playerArray[i].getRole() + " got Blackjack. You have lost");
 					playerWins(playerArray[i], i);
 					playerLoses(i);
 					return false;
 				} else if (handArray[i].valueOfHand() > 21)
 				{
-					System.out.println(handArray[i].getId() + " has busted");
+					System.out.println(playerArray[i].getRole() + " has busted");
 				} else	
 				{
-					System.out.println(handArray[i].getId() + " has completed turn");
+					System.out.println(playerArray[i].getRole() + " has completed turn");
 				}
 				
 			}

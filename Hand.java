@@ -14,10 +14,6 @@ public class Hand {
 	public Hand(String id){
 		hand = new ArrayList <Card> (2);
 		this.id = id;
-		//TODO - right now I have the human status being set based on the id given
-		//I wonder if there's a better/more elegant way to declare who the human player is
-		if (id == "Agent")
-			this.human = true;
 	}
 	
 	//Accessors
